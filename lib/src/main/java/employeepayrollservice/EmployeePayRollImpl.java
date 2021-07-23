@@ -1,32 +1,83 @@
 package employeepayrollservice;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class EmployeePayRollImpl
+public class EmployeePayRollImpl 
 {
+	private List<EmployeePayRollData> employePayrollList = new ArrayList<EmployeePayRollData>();
+	Scanner scanner = new Scanner(System.in);
+	private static final String FILE_PATH = "c://Users//malij//OneDrive//Desktop//payroll-file.txt";
 
-	private List<EmployeePayRollData> employeePayrollDataList;
+	public void readEmployeeDataFromConsole() 
+	{
+		System.out.println("Enter Employee Id");
+		int id = scanner.nextInt();
+		System.out.println("Enter Employee Name");
+		String Name = scanner.next();
+		System.out.println("Enter the salary");
+		int salary = scanner.nextInt();
+		employePayrollList.add(new EmployeePayRollData(id, Name, salary));
+	}
 
-    public EmployeePayRollImpl(List<EmployeePayRollData> employeePayrollDataList)
-    {
-        this.employeePayrollDataList = employeePayrollDataList;
-    }
+	public void writeEmployeeDataInConsole() 
+	{
+		System.out.println("Writing Employee Pay Roll Data \n"+employePayrollList);
+	}
 
-    void readEmployeePayrollData(Scanner consoleInputReader)
-    {
-        System.out.print("Enter Employee-Id : ");
-        int id = consoleInputReader.nextInt();
-        System.out.print("Enter Employee-Name : ");
-        String name = consoleInputReader.next();
-        System.out.print("Enter Employee-Salary : ");
-        double salary = consoleInputReader.nextDouble();
-        employeePayrollDataList.add(new EmployeePayRollData(id, name, salary));
-    }
+	public void addEmployee(EmployeePayRollData employee)
+	{
+		employePayrollList.add(employee);
+	}
 
-    void writeEmployeePayrollData()
-    {
-        System.out.println("\nWriting Employee Payroll To Console:\n" + employeePayrollDataList);
-    }
-	
+	public void writeEmployeeDataToFile()  
+	{
+		checkFile();
+		StringBuffer empBuffer = new StringBuffer();
+		employePayrollList.forEach(employee ->{
+			String employeeDataString = employee.toString().concat("\n");
+			empBuffer.append(employeeDataString);
+		});
+		try {
+			Files.write(Paths.get(FILE_PATH), empBuffer.toString().getBytes());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void checkFile() 
+	{
+		File file = new File(FILE_PATH);
+		try 
+		{
+			if (!file.exists()) 
+			{
+				file.createNewFile();
+				System.out.println("Created a file at "+FILE_PATH);
+			} 		
+		}
+		catch (IOException e1) 
+		{			
+			System.err.println("Problem encountered while creating a file");
+		}
+	}
+
+	public long countEntries()
+	{
+		long entries = 0;
+		try 
+		{
+			entries = Files.lines(new File(FILE_PATH).toPath()).count();
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+		return entries;
+	}
 }
