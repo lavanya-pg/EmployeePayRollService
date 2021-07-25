@@ -12,7 +12,7 @@ public class EmployeePayRollImpl
 {
 	private List<EmployeePayRollData> employePayrollList = new ArrayList<EmployeePayRollData>();
 	Scanner scanner = new Scanner(System.in);
-	private static final String FILE_PATH = "c://Users//malij//OneDrive//Desktop//payroll-file.txt";
+	private static final String FILE_PATH = "C:\\Users\\Lavanya\\Desktop\\payroll.txt";
 
 	public void readEmployeeDataFromConsole() 
 	{
@@ -49,7 +49,6 @@ public class EmployeePayRollImpl
 			e.printStackTrace();
 		}
 	}
-
 	private void checkFile() 
 	{
 		File file = new File(FILE_PATH);
@@ -66,7 +65,6 @@ public class EmployeePayRollImpl
 			System.err.println("Problem encountered while creating a file");
 		}
 	}
-
 	public long countEntries()
 	{
 		long entries = 0;
@@ -79,5 +77,16 @@ public class EmployeePayRollImpl
 			e.printStackTrace();
 		}
 		return entries;
+	}
+	public void printData() 
+	{
+		try 
+		{
+			Files.lines(Paths.get(FILE_PATH)).forEach(System.out::println);
+		}
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
 	}
 }
